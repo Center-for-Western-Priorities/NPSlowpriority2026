@@ -363,7 +363,7 @@
       '<h4>' + esc(r.title) + '</h4>' +
       '<div class="badges"><span class="badge fund">' + esc(r.fund) + '</span></div>' +
       (desc ? '<p class="desc">' + esc(desc) + '</p>' : '') +
-      '<p class="rec">Record ' + r.id + (r.how !== 'as listed' ? ' &middot; location inferred from the record’s text' : '') +
+      '<p class="rec">Record ' + r.id + (r.how.indexOf('inferred') === 0 ? ' &middot; location inferred from the record’s text' : '') +
         (r.region ? '' : ' &middot; no region given') + '</p>' +
     '</article>';
   }

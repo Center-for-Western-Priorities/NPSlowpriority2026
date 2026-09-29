@@ -2,12 +2,43 @@
 
 ## Source
 
-[SOURCE PLACEHOLDER: what the list is, who designated these projects low
-priority, when, and what the designation means. To be written and approved
-before publication.]
+The project records come from an internal National Park Service project
+database. Every record carries a low-priority designation. The map shows all
+1,492. None was excluded, merged, or added.
 
-Every project in the list carries the same low-priority designation. The map
-shows all 1,492. None was excluded, merged, or added.
+The records were accessed on TKTKDate. They carry no dates and no cost
+estimates, so the map cannot say when each designation was made or whether it
+has changed since.
+
+## Context
+
+The Associated Press reported on August 21, 2026, that maintenance projects
+approved for 2026 at parks across the country had been moved to a new "low
+priority" list, while projects wanted by the White House, including repairs to
+the Lincoln Memorial Reflecting Pool and work tied to the Freedom 250
+initiative, took precedence
+([Matthew Brown, AP](https://apnews.com/article/national-parks-white-house-priorities-051fd27a454094a7cbec0718517e35e3)). According to AP:
+
+- About 1,500 projects were on the low-priority list as of July, spanning more
+  than 200 sites, with a combined cost estimate of more than $400 million.
+- The priority designations came from NPS headquarters in Washington, according
+  to documents AP obtained and one official.
+- Officials said almost all of the low-priority projects were expected to go
+  undone. Park staff "were told to not expect anything on the low priority list
+  to be contracted," one official said.
+- A separate high-priority list held more than 2,000 projects, and a third list
+  held White House priorities.
+- The Interior Department said many entries on the low-priority list had been
+  "mis-prioritized and were corrected." It declined to say how many or which ones.
+
+AP's figures come from its own reporting. The counts on this map come from the
+records described above. The two are close: 1,492 projects here, about 1,500 in
+AP's count. The $400 million figure is AP's and cannot be checked against these
+records, which carry no costs.
+
+When describing this map in writing, the accurate phrasing is "1,492 projects
+designated low priority in NPS records." Because Interior says some entries were
+corrected, avoid saying every project on the map was cancelled or will go unfunded.
 
 ## Text shown on the map
 

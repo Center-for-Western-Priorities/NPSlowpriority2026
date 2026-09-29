@@ -1,12 +1,11 @@
 # NPS Low-Priority Projects, 2026
 
-> **Draft.** Bracketed text marked `[PLACEHOLDER]` here and on the map is holding
-> space for copy that has not been written or approved yet: the title, the source
-> line, and the framing of what a low-priority designation means.
-
 An interactive map of 1,492 National Park Service projects designated low
-priority. [FRAMING PLACEHOLDER: who made the designation, when, and what it
-means for the projects.] Each marker is a park unit or an NPS office. Click one to
+priority in 2026. The Associated Press
+[reported in August](https://apnews.com/article/national-parks-white-house-priorities-051fd27a454094a7cbec0718517e35e3) that NPS headquarters moved about 1,500 projects
+approved for the year to a "low priority" list while work tied to White House
+priorities went ahead, and that officials expected almost all of them to go
+undone. Each marker is a park unit or an NPS office. Click one to
 read every project listed there, with its description and fund source.
 
 A companion to the
@@ -105,7 +104,8 @@ link is relative.
 
 ## Sources
 
-- Project records: [SOURCE PLACEHOLDER]
+- Project records: internal NPS project database
+- Background: Matthew Brown, "[National park maintenance work sidelined as Trump's Freedom 250 takes precedence](https://apnews.com/article/national-parks-white-house-priorities-051fd27a454094a7cbec0718517e35e3)," Associated Press, August 21, 2026
 - Park coordinates and outlines: [NPS Land Resources Division Boundary and Tract Data Service](https://services1.arcgis.com/fBc8EJBxQRMcHlei/ArcGIS/rest/services/NPS_Land_Resources_Division_Boundary_and_Tract_Data_Service/FeatureServer), layers 0 and 2
 - Office locations: addresses published by NPS, listed individually in [docs/PLACEMENTS.md](docs/PLACEMENTS.md)
 - Basemap: [Esri Light Gray Canvas](https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer), credited to Esri, HERE, Garmin, and OpenStreetMap contributors
