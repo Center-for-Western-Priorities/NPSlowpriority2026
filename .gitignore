@@ -1,0 +1,38 @@
+# OS and editor cruft
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+~$*
+
+# Google Drive / Office lock files
+.~lock.*
+*.tmp
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local build scratch
+*.png
+preview.html
+
+# Local working files, not part of the published site.
+# data/nps-disapprovals-2026.csv is the published dataset; build/prep.py falls
+# back to it when the source workbook is absent.
+data/source/
+_internal/
+
+# Unsimplified boundary download. build/fetch_boundaries.py refetches it; only
+# the simplified build/vendor/nps-boundaries.json is committed.
+build/vendor/nps-boundaries-raw.geojson
+
+# Editorial copy. The repo carries the map, the data, and the method. Headlines,
+# intro text, and other page copy are drafted and reviewed elsewhere and do not
+# belong in a public repository.
+*intro*.md
+drafts/
+copy/
+Claude outputs/

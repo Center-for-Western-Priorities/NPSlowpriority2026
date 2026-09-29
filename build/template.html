@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>[WORKING TITLE] NPS Low-Priority Projects</title>
+<meta name="description" content="[DESCRIPTION PLACEHOLDER] Interactive map of National Park Service projects designated low priority.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js" integrity="sha512-BwHfrr4c9kmRkLw6iXFdzcdWV/PGkVgiIyIWLLlTSXzWQzxuSg4DiQUCpauz/EWjgk5TYQqX/kvn9pG1NpYfqg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@400;600;700&family=Open+Sans:wght@400;600;700&family=Source+Sans+3:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* --- Leaflet 1.9.4, inlined: artifact pages only allow external stylesheets
+   from Google Fonts, so the library CSS has to ship with the page. --- */
+__LEAFLET_CSS__
+/* --- end Leaflet --- */
+
+:root{
+  --green:#78b43c; --orange:#d2781e; --orange-dk:#a75c13; --blue:#4398b5; --steel:#5a87a5;
+  --wordmark:#465050; --gold:#96782d; --deep:#2f5b74;
+  --bg:#f5f5f3; --surface:#ffffff; --surface-2:#efeee9; --rule:#e0ddd8;
+  --ink:#2a2a28; --ink-2:#4f4d48; --ink-3:#5a564f;
+  /* Text-safe variants. The brand green and steel fall below WCAG AA at body size
+     on a light background, so text and glyphs use these and the brand values stay
+     for fills, rules, and other non-text marks. */
+  --green-tx:#557f28; --link:#2f5b74;
+  --land:#d9d6cf; --land-line:#c3bfb7;
+  --bar:#1e2624;
+  --sidebar-w:288px; --detail-w:360px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font-family:'Source Sans 3','Open Sans',system-ui,-apple-system,sans-serif;font-size:16px;line-height:1.6;
+  -webkit-font-smoothing:antialiased}
+.app{display:flex;flex-direction:column;height:100%;min-height:0}
+
+/* ---------- masthead ---------- */
+.bar{background:var(--bar);border-bottom:3px solid var(--green);flex:0 0 auto;
+  padding:11px 18px;padding-top:calc(11px + env(safe-area-inset-top, 0px));
+  display:flex;align-items:center;gap:12px}
+.mark{flex:0 0 auto;width:30px;height:30px;display:block}
+.bar h1{font-family:'Bitter',Georgia,serif;font-weight:700;font-size:17px;line-height:1.15;margin:0;color:#fff}
+.bar .toggle{margin-left:auto;display:none;background:none;border:1px solid #3c4a46;border-radius:4px;
+  color:#cfd6d2;font-size:15px;line-height:1;padding:8px 11px;cursor:pointer}
+
+/* ---------- body split ---------- */
+.split{flex:1 1 auto;display:flex;min-height:0}
+
+/* ---------- sidebar ---------- */
+.side{flex:0 0 var(--sidebar-w);width:var(--sidebar-w);background:var(--surface);
+  border-right:1px solid var(--rule);overflow-y:auto;padding:16px 16px 22px}
+.side h2{font-family:'Open Sans',system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.11em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 9px}
+.side section + section{margin-top:20px;padding-top:18px;border-top:1px solid var(--rule)}
+.side section:first-of-type{margin-top:0}
+
+.opt{display:flex;align-items:center;gap:9px;padding:5px 0;cursor:pointer;
+  font-family:'Open Sans',system-ui,sans-serif;font-size:14px;color:var(--ink);line-height:1.35}
+.opt input{flex:0 0 auto;margin:0;accent-color:var(--deep);width:14px;height:14px}
+.opt .sw{flex:0 0 auto;width:11px;height:11px;border-radius:2px}
+.opt .nm{flex:1 1 auto;min-width:0}
+.opt .ct{flex:0 0 auto;color:var(--ink-3);font-variant-numeric:tabular-nums;font-size:13px}
+.opt.off .nm,.opt.off .ct{color:var(--ink-3)}
+
+input[type=search],select{width:100%;font-family:'Open Sans',system-ui,sans-serif;font-size:14px;color:var(--ink);
+  background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:8px 10px;min-height:36px}
+.btn{font-family:'Open Sans',system-ui,sans-serif;font-size:13px;font-weight:600;color:var(--ink-2);
+  background:var(--surface);border:1px solid var(--rule);border-radius:4px;padding:7px 12px;cursor:pointer}
+.btn:hover{border-color:var(--ink-3);color:var(--ink)}
+:is(select,input,button,summary,[tabindex]):focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+
+details.fold{margin-top:4px}
+details.fold > summary{font-family:'Open Sans',system-ui,sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.11em;text-transform:uppercase;color:var(--ink-3);cursor:pointer;list-style:none;
+  display:flex;align-items:center;gap:6px}
+details.fold > summary::-webkit-details-marker{display:none}
+details.fold > summary::before{content:"\25B8";font-size:9px;transition:transform .15s ease}
+details.fold > summary span:last-child{margin-left:auto;font-variant-numeric:tabular-nums}
+details.fold[open] > summary::before{transform:rotate(90deg)}
+p.foldnote{font-family:'Open Sans',system-ui,sans-serif;font-size:12.5px;line-height:1.55;
+  color:var(--ink-2);margin:9px 0 2px}
+.offlist{margin:10px 0 0;padding:0;list-style:none}
+.offlist li{margin:0 0 2px}
+.offlist button{display:block;width:100%;text-align:left;background:none;border:0;padding:5px 0;cursor:pointer;
+  font-family:'Open Sans',system-ui,sans-serif;font-size:13px;color:var(--link);line-height:1.4}
+.offlist button:hover{color:var(--ink)}
+.offlist .ct{color:var(--ink-3);font-variant-numeric:tabular-nums}
+.offlist button.off{color:var(--ink-3)}
+
+.dl{display:flex;gap:9px;align-items:flex-start;text-decoration:none;
+  border:1px solid var(--rule);border-left:3px solid var(--green);border-radius:4px;padding:10px 11px}
+.dl:hover{border-color:var(--ink-3);border-left-color:var(--green);background:var(--surface-2)}
+.dl .ic{flex:0 0 auto;font-size:15px;line-height:1.2;color:var(--green-tx)}
+.dl b{display:block;font-family:'Open Sans',system-ui,sans-serif;font-size:14px;font-weight:600;color:var(--ink)}
+.dl em{display:block;font-style:normal;font-family:'Open Sans',system-ui,sans-serif;font-size:12.5px;
+  color:var(--ink-2);line-height:1.45;margin-top:3px}
+.src{font-family:'Open Sans',system-ui,sans-serif;font-size:12.5px;line-height:1.6;color:var(--ink-2)}
+.src p{margin:0 0 7px}
+.src a{color:var(--link)}
+.src code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--ink-2)}
+
+/* ---------- map ---------- */
+.mapwrap{flex:1 1 auto;min-width:0;position:relative;display:flex;flex-direction:column;background:var(--bg)}
+.mapinner{flex:1 1 auto;min-height:0;position:relative}
+#map{position:absolute;inset:0;background:var(--land);z-index:0}
+.leaflet-container{font-family:'Open Sans',system-ui,sans-serif;background:var(--land)}
+.leaflet-control-attribution{font-size:11.5px;background:rgba(255,255,255,.82)}
+.leaflet-control-attribution a{color:var(--link)}
+.leaflet-bar a{color:var(--ink-2)}
+.leaflet-bar a:hover{color:var(--ink)}
+
+/* Park outlines. A locator shape under the marker, not a survey boundary:
+   simplified, holes dropped. Kept faint so the markers stay the figure. */
+.bnd{fill:var(--green);fill-opacity:.17;stroke:#4e7524;stroke-opacity:.5;stroke-width:1;
+  transition:fill-opacity .12s ease}
+.bnd:hover{fill-opacity:.3}
+.bnd.sel{fill:var(--orange);fill-opacity:.3;stroke:var(--orange-dk);stroke-opacity:.85;stroke-width:1.4}
+
+/* Markers are div icons rather than Leaflet's default pin: fixed pixel size,
+   so zooming pulls overlapping locations apart instead of magnifying them. */
+.mk{display:block;background:var(--orange);opacity:.82;border:1.5px solid #fff;
+  box-sizing:border-box;cursor:pointer;transition:opacity .1s ease}
+.mk.circ{border-radius:50%}
+.mk:hover{opacity:1;border-width:2.5px}
+.mk.sel{background:var(--orange-dk);opacity:1;border-color:var(--wordmark);border-width:2.5px}
+.leaflet-marker-icon:focus-visible .mk{outline:2px solid var(--blue);outline-offset:2px}
+
+.leaflet-tooltip.tip{background:var(--wordmark);color:#fff;border:0;border-radius:4px;
+  padding:8px 11px;font-size:12.5px;line-height:1.4;box-shadow:0 2px 10px rgba(0,0,0,.22);
+  /* width:max-content stops Leaflet's own sizing from squeezing the label into
+     a narrow column; max-width still wraps genuinely long park names. */
+  white-space:normal;width:max-content;max-width:250px}
+.leaflet-tooltip.tip:before{display:none}
+.tip b{display:block;font-size:13px;font-weight:700;margin-bottom:3px}
+.tip span{color:#c3cbc7}
+
+.regionjump{position:absolute;top:14px;right:14px;z-index:500;display:flex;gap:0}
+.regionjump button{font-family:'Open Sans',system-ui,sans-serif;font-size:12.5px;font-weight:600;
+  color:var(--ink-2);background:rgba(255,255,255,.94);border:1px solid var(--rule);
+  padding:5px 9px;cursor:pointer}
+.regionjump button + button{border-left:0}
+.regionjump button:first-child{border-radius:4px 0 0 4px}
+.regionjump button:last-child{border-radius:0 4px 4px 0}
+.regionjump button:hover{color:var(--ink);background:#fff}
+
+.zoomhint{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  background:rgba(30,38,36,.42);color:#fff;font-family:'Open Sans',system-ui,sans-serif;font-size:14px;
+  font-weight:600;text-align:center;padding:20px;z-index:600;pointer-events:none;
+  opacity:0;transition:opacity .18s ease}
+.zoomhint.show{opacity:1}
+.mk:hover{fill-opacity:1;stroke-width:2}
+.mk.sel{fill:var(--orange-dk);fill-opacity:1;stroke:var(--wordmark);stroke-width:2.2}
+.mk.dim{fill-opacity:.09;stroke-opacity:.2;pointer-events:none}
+.tip{position:absolute;pointer-events:none;background:var(--wordmark);color:#fff;
+  font-family:'Open Sans',system-ui,sans-serif;font-size:12.5px;line-height:1.4;padding:8px 11px;
+  border-radius:4px;max-width:240px;z-index:6;box-shadow:0 2px 10px rgba(0,0,0,.22)}
+.tip b{display:block;font-size:13px;font-weight:700;margin-bottom:3px}
+.tip span{color:#c3cbc7}
+.mapfoot{flex:0 0 auto;display:flex;flex-wrap:wrap;gap:6px 18px;align-items:center;
+  padding:6px 18px calc(11px + env(safe-area-inset-bottom, 0px));
+  font-family:'Open Sans',system-ui,sans-serif;font-size:12.5px;color:var(--ink-2);
+  border-top:1px solid var(--rule);background:var(--surface)}
+.key{display:inline-flex;align-items:center;gap:6px}
+.key i.sw{display:inline-block;width:11px;height:11px;background:var(--orange);opacity:.82;
+  border:1.5px solid #fff;box-sizing:border-box;outline:1px solid var(--rule)}
+.key i.sw.circ{border-radius:50%}
+.key i.sw.sm{width:8px;height:8px}
+.key i.sw.lg{width:15px;height:15px;margin-left:3px}
+.mapfoot #tally{color:var(--ink-2);font-variant-numeric:tabular-nums}
+.mapfoot .cwp{margin-left:auto}
+.mapfoot a{color:var(--link)}
+
+/* ---------- detail ---------- */
+.detail{flex:0 0 var(--detail-w);width:var(--detail-w);background:var(--surface);
+  border-left:1px solid var(--rule);display:flex;flex-direction:column;min-height:0}
+.detail[hidden]{display:none}
+.dhead{flex:0 0 auto;padding:14px 16px 12px;border-bottom:1px solid var(--rule);position:relative}
+.dhead .code{font-family:'Open Sans',system-ui,sans-serif;font-size:12px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--orange-dk)}
+.dhead h3{font-family:'Bitter',Georgia,serif;font-weight:600;font-size:19px;line-height:1.28;margin:6px 34px 0 0;text-wrap:balance}
+.dhead .meta{font-family:'Open Sans',system-ui,sans-serif;font-size:12.5px;color:var(--ink-2);margin-top:6px}
+.close{position:absolute;top:12px;right:12px;background:none;border:0;font-size:19px;line-height:1;
+  color:var(--ink-3);cursor:pointer;padding:3px 6px;border-radius:4px}
+.close:hover{color:var(--ink);background:var(--surface-2)}
+.dbody{flex:1 1 auto;overflow-y:auto;padding:2px 16px 20px}
+
+.agr{border-bottom:1px solid var(--rule);padding:14px 0}
+.agr:last-child{border-bottom:0}
+.agr h4{font-family:'Bitter',Georgia,serif;font-weight:600;font-size:15.5px;line-height:1.35;margin:0;text-wrap:balance}
+.agr .who{font-family:'Open Sans',system-ui,sans-serif;font-size:13px;color:var(--ink-2);margin-top:4px}
+.badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.badge{font-family:'Open Sans',system-ui,sans-serif;font-size:12px;font-weight:600;letter-spacing:.04em;
+  text-transform:uppercase;padding:3px 7px;border-radius:3px;background:var(--surface-2);color:var(--ink-2);
+  display:inline-flex;align-items:center;gap:5px}
+.badge i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.badge.fund{background:rgba(47,91,116,.10);color:var(--deep);font-variant-numeric:tabular-nums}
+.agr details{margin-top:9px}
+.agr summary{font-family:'Open Sans',system-ui,sans-serif;font-size:13px;font-weight:600;
+  color:var(--link);cursor:pointer;list-style:none;display:inline-flex;align-items:center;gap:5px}
+.agr summary::-webkit-details-marker{display:none}
+.agr summary::before{content:"+";font-size:13px;line-height:1}
+.agr details[open] summary::before{content:"\2212"}
+.agr .txt{font-size:15.5px;color:var(--ink-2);line-height:1.6;margin:10px 0 0}
+.agr .txt h5{font-family:'Open Sans',system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.08em;
+  text-transform:uppercase;color:var(--ink-2);margin:12px 0 4px}
+.agr .txt h5:first-child{margin-top:0}
+.agr .txt p{margin:0}
+.agr .quote{border-left:2px solid var(--green);padding-left:11px}
+.agr .rec{font-family:'Open Sans',system-ui,sans-serif;font-size:12.5px;color:var(--ink-2)}
+
+.badge.fund{background:rgba(47,91,116,.10);color:var(--deep)}
+.agr p.desc{font-size:15px;color:var(--ink-2);line-height:1.6;margin:8px 0 0}
+.agr .rec{margin-top:8px}
+.grp{font-family:'Open Sans',system-ui,sans-serif;font-size:12px;font-weight:700;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--orange-dk);margin:18px 0 0;padding-top:12px;border-top:2px solid var(--rule)}
+.grp:first-child{margin-top:8px;border-top:0;padding-top:0}
+.grp span{color:var(--ink-3);font-weight:600}
+.nolink{display:block;width:100%;text-align:left;background:none;border:0;padding:5px 0;cursor:pointer;
+  font-family:'Open Sans',system-ui,sans-serif;font-size:13px;color:var(--link);line-height:1.4}
+.nolink .ct{color:var(--ink-3);font-variant-numeric:tabular-nums}
+.ph{background:#fff3c4;color:#5c4a00;padding:0 3px;border-radius:2px}
+
+/* ---------- narrow ---------- */
+@media (max-width:1100px){ :root{ --detail-w:320px } }
+@media (max-width:900px){
+  .bar .toggle{display:block}
+  html,body{height:auto}
+  /* 100vh, not 100%: with body at auto height a percentage has nothing to
+     resolve against, so the app stopped short of the frame and left a grey
+     band under the footer in a short embed. */
+  .app{height:auto;min-height:100vh}
+  .split{flex-direction:column}
+  .side{flex:0 0 auto;width:auto;border-right:0;border-bottom:1px solid var(--rule)}
+  .side[hidden]{display:none}
+  /* Grow to absorb any slack so a short frame does not leave a dead grey band
+     under the footer; min-height keeps the map usable in a tall frame. */
+  .mapwrap{flex:1 1 auto;min-height:62vh}
+  .mapinner{min-height:62vh}
+  .detail{flex:0 0 auto;width:auto;border-left:0;border-top:1px solid var(--rule)}
+  .dbody{overflow:visible}
+}
+@media (max-width:620px){
+  .bar h1{font-size:15.5px}
+  /* Six view buttons do not fit beside the zoom control on a phone, so they
+     move to the bottom edge and wrap. */
+  .regionjump{top:auto;bottom:34px;left:10px;right:10px;flex-wrap:wrap;justify-content:center}
+  .regionjump button{padding:5px 8px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <header class="bar">
+    <svg class="mark" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 106 106">
+      <path fill="#85bc40" d="M 52.933 9.449 L 74.191 30.699 L 52.933 51.953 L 31.683 30.703 Z M 52.933 9.449 "/>
+      <path fill="#678ba4" d="M 96.464 53.023 L 75.214 74.273 L 53.960 53.023 L 75.210 31.769 Z M 96.464 53.023 "/>
+      <path fill="#d97a28" d="M 52.039 53.023 L 30.789 74.273 L 9.535 53.023 L 30.785 31.769 Z M 52.039 53.023 "/>
+      <path fill="#99813a" d="M 52.890 96.550 L 31.640 75.296 L 52.890 54.042 L 74.144 75.292 Z M 52.890 96.550 "/>
+      <path fill="#ffffff" d="M 79.140 63.925 C 82.886 62.234 83.445 58.726 83.214 57.011 C 82.890 54.628 81.460 52.832 80.382 51.582 C 80.320 51.507 77.667 48.722 76.730 45.769 C 76.375 44.640 76.164 43.101 76.058 41.621 C 75.957 40.191 75.914 37.867 75.898 37.867 C 75.773 38.191 75.449 39.058 75.128 40.238 C 74.546 42.390 73.960 45.582 74.558 48.5 C 75.187 51.996 77.632 55.417 78.082 56.917 C 78.613 58.773 78.164 60.660 75.863 60.945 C 72.628 61.359 71.910 58.007 72.238 56.480 C 72.867 56.105 73.984 55.652 74.738 55.937 C 74.058 55.328 73.378 50.445 73.921 48.003 C 70.496 50.429 68 55.882 68.433 59.578 C 69.027 57.839 69.863 57.214 69.863 57.234 C 69.789 57.675 69.679 60.070 70.605 61.644 C 72.363 64.437 75.769 65.449 79.140 63.925 "/>
+      <path fill="#ffffff" d="M 53.511 17.964 C 53.511 17.964 46.304 28.480 46.304 33.015 C 46.304 36.648 48.980 39.644 52.468 40.148 C 52.996 40.222 53.101 40.140 53.125 39.644 C 53.136 39.410 53.140 37.238 53.140 37.238 C 53.140 37.105 53.058 36.921 52.960 36.832 L 48.039 32.406 C 47.941 32.316 47.929 32.164 48.011 32.066 C 48.093 31.968 48.246 31.957 48.347 32.039 L 52.960 35.812 C 53.062 35.898 53.148 35.859 53.148 35.726 L 53.167 32.714 C 53.167 32.582 53.085 32.402 52.988 32.312 L 49.445 29.183 C 49.347 29.093 49.328 28.941 49.410 28.835 C 49.488 28.738 49.640 28.726 49.746 28.808 L 52.980 31.316 C 53.089 31.398 53.175 31.359 53.175 31.222 L 53.191 28.136 C 53.195 28 53.109 27.824 53.007 27.738 L 50.855 25.957 C 50.753 25.871 50.730 25.718 50.804 25.613 C 50.882 25.507 51.035 25.484 51.144 25.558 L 53 26.804 C 53.109 26.878 53.203 26.828 53.203 26.695 L 53.222 22.937 C 53.226 22.804 53.339 22.695 53.468 22.695 L 53.546 22.695 C 53.683 22.695 53.789 22.804 53.792 22.937 L 53.816 26.695 C 53.816 26.828 53.906 26.878 54.019 26.804 L 55.875 25.558 C 55.984 25.484 56.136 25.507 56.210 25.613 C 56.289 25.718 56.261 25.871 56.160 25.957 L 54.007 27.738 C 53.906 27.824 53.820 28 53.824 28.136 L 53.839 31.222 C 53.843 31.359 53.929 31.398 54.039 31.316 L 57.273 28.808 C 57.375 28.726 57.527 28.738 57.609 28.835 C 57.691 28.941 57.671 29.093 57.574 29.183 L 54.031 32.312 C 53.929 32.402 53.851 32.582 53.851 32.714 L 53.871 35.726 C 53.871 35.859 53.957 35.898 54.058 35.812 L 58.671 32.039 C 58.773 31.957 58.925 31.968 59.007 32.066 C 59.089 32.164 59.074 32.316 58.976 32.406 L 54.054 36.832 C 53.960 36.921 53.878 37.105 53.878 37.238 C 53.878 37.238 53.906 41.406 53.906 41.570 C 53.902 41.742 54.011 41.933 54.222 41.933 L 55.050 41.933 C 55.363 41.933 55.359 41.777 55.359 41.515 L 55.359 40.871 C 55.359 40.378 55.503 39.980 56.128 39.734 C 58.812 38.687 60.714 36.078 60.714 33.015 C 60.714 28.480 53.511 17.964 53.511 17.964 "/>
+      <path fill="#ffffff" d="M 60.093 68.406 L 60.480 69.449 L 55.156 75.031 Z M 55.406 64.445 L 55.546 64.812 L 53.667 66.785 Z M 54.246 63.082 L 54.312 64.707 L 48.335 72.371 Z M 39.890 75.292 L 43.921 68.406 L 45.089 68.863 Z M 60.105 67.882 L 59.320 68.125 L 54.335 61.976 L 48.832 69.449 L 43.718 67.519 L 37.164 78.605 L 65.613 78.605 Z M 60.105 67.882 "/>
+      <path fill="#ffffff" d="M 23.265 59.363 L 26.640 59.363 L 26.640 53.363 L 29.832 53.363 L 29.832 59.363 L 38.269 59.363 L 38.269 50.453 L 40.144 50.453 L 36.406 46.714 L 36.406 43.234 L 34.707 43.234 L 34.707 45.015 L 30.863 41.171 L 21.582 50.453 L 23.265 50.453 Z M 23.265 59.363 "/>
+      </svg>
+    <h1>[WORKING TITLE] NPS Low-Priority Projects</h1>
+    <button class="toggle" id="toggle" type="button" aria-expanded="true" aria-controls="side">Filters</button>
+  </header>
+
+  <div class="split">
+
+    <aside class="side" id="side">
+      <section>
+        <h2>Region</h2>
+        <select id="f-region" aria-label="Filter by NPS region"><option value="">All regions</option></select>
+      </section>
+
+      <section>
+        <h2>Search</h2>
+        <input type="search" id="f-q" placeholder="Park, office, or keyword" autocomplete="off" aria-label="Search projects">
+        <div style="margin-top:10px"><button class="btn" id="f-reset" type="button">Reset all filters</button></div>
+      </section>
+
+      <section>
+        <details class="fold" id="fold-off">
+          <summary><span>Offices and programs</span><span id="off-n">0</span></summary>
+          <p class="foldnote">Regional offices, national directorates, inventory and monitoring networks, and trails administered from an office. Each is drawn as a square at the address NPS publishes for it.</p>
+          <ul class="offlist" id="offlist"></ul>
+        </details>
+        <button class="nolink" id="nolink" type="button" style="margin-top:8px">No location given <span class="ct" id="none-n">0</span></button>
+      </section>
+
+      <section>
+        <details class="fold" id="fold-prog">
+          <summary><span>Fund source</span><span id="prog-n">0</span></summary>
+          <p class="foldnote">The funding source listed for each project. These are budget categories, not a description of the work, and many projects list none.</p>
+          <div id="progs"></div>
+        </details>
+      </section>
+
+      <section>
+        <h2>Full dataset</h2>
+        <a class="dl" href="data/nps-low-priority-projects-2026.csv" download>
+          <span class="ic" aria-hidden="true">&darr;</span>
+          <span><b>Download CSV</b><em id="dl-note"></em></span>
+        </a>
+      </section>
+
+      <section class="src">
+        <h2>Source and method</h2>
+        <p><span class="ph">[SOURCE LINE PLACEHOLDER: who designated these projects low priority, when, and how CWP obtained the list. To be approved before publication.]</span></p>
+        <p>Park markers use NPS Land Resources Division boundary centroids. Offices, directorates, networks, and trails serve more than one park; each is drawn as a square at the address NPS publishes for it. Offices that share an address share one marker.</p>
+        <p>Center for Western Priorities &middot; <a href="https://westernpriorities.org" target="_blank" rel="noopener">westernpriorities.org</a></p>
+      </section>
+    </aside>
+
+    <div class="mapwrap">
+      <div class="mapinner" id="mapinner">
+        <div id="map" role="application" aria-label="Map of National Park Service units and offices with projects designated low priority"></div>
+        <div class="regionjump">
+          <button type="button" data-view="all">All</button>
+          <button type="button" data-view="lower48">Lower 48</button>
+          <button type="button" data-view="ak">Alaska</button>
+          <button type="button" data-view="hi">Hawai&#699;i</button>
+          <button type="button" data-view="pac">Pacific</button>
+          <button type="button" data-view="car">Caribbean</button>
+        </div>
+        <div class="zoomhint" id="zoomhint" hidden aria-hidden="true"></div>
+      </div>
+      <div class="mapfoot">
+        <span class="key"><i class="sw circ"></i> Park unit</span>
+        <span class="key"><i class="sw"></i> Office or program</span>
+        <span class="key"><i class="sw circ sm"></i><i class="sw circ lg"></i> Size: projects</span>
+        <span id="tally"></span>
+        <span class="cwp"><span class="ph">[SOURCE]</span> &middot; <a href="https://westernpriorities.org" target="_blank" rel="noopener">westernpriorities.org</a></span>
+      </div>
+    </div>
+
+    <aside class="detail" id="detail" hidden aria-live="polite">
+      <div class="dhead" id="dhead"></div>
+      <div class="dbody" id="dbody"></div>
+    </aside>
+
+  </div>
+</div>
+
+<script id="data" type="application/json">__PAYLOAD__</script>
+<script id="bounds" type="application/json">__BOUNDARIES__</script>
+<script>
+__APP_JS__
+</script>
+</body>
+</html>
