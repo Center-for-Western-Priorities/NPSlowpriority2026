@@ -6,7 +6,7 @@ The project records come from an internal National Park Service project
 database. Every record carries a low-priority designation. The map shows all
 1,492. None was excluded, merged, or added.
 
-The records were accessed on TKTKDate. They carry no dates and no cost
+The records are current as of late August 2026. They carry no dates and no cost
 estimates, so the map cannot say when each designation was made or whether it
 has changed since.
 
